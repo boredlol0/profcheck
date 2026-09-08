@@ -2,18 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import type { ComposePrefill } from "@/components/Ledger";
-import {
-  Anonymity,
-  CtaBand,
-  Footer,
-  HowItWorks,
-  Stats,
-} from "@/components/Sections";
+import { Ledger, type ComposePrefill } from "@/components/Ledger";
+import { Footer } from "@/components/Sections";
 import { Composer, Toast, type ToastMsg } from "@/components/Composer";
 
-export default function Home() {
+export default function ProfessorsPage() {
   const [composerOpen, setComposerOpen] = useState(false);
   const [prefill, setPrefill] = useState<ComposePrefill>({});
   const [composerKey, setComposerKey] = useState(0);
@@ -43,11 +36,7 @@ export default function Home() {
     <>
       <Header onCompose={() => openComposer()} />
       <main className="flex-1">
-        <Hero onCompose={() => openComposer()} />
-        <Stats />
-        <HowItWorks />
-        <Anonymity />
-        <CtaBand onCompose={() => openComposer()} />
+        <Ledger onCompose={openComposer} />
       </main>
       <Footer
         onReport={() =>
