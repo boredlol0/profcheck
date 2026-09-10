@@ -1,59 +1,81 @@
-"use client";
+import styles from "./professors.module.css";
+import { getProfessors } from "@/lib/directory";
+import { IconSprite, Icon } from "@/components/site/icons";
+import { DirectoryFooter, DirectoryHeader } from "@/components/site/DirectoryChrome";
+import { DirectoryClient } from "@/components/site/DirectoryClient";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Header } from "@/components/Header";
-import { Ledger, type ComposePrefill } from "@/components/Ledger";
-import { Footer } from "@/components/Sections";
-import { Composer, Toast, type ToastMsg } from "@/components/Composer";
+export const dynamic = "force-dynamic";
 
-export default function ProfessorsPage() {
-  const [composerOpen, setComposerOpen] = useState(false);
-  const [prefill, setPrefill] = useState<ComposePrefill>({});
-  const [composerKey, setComposerKey] = useState(0);
-  const [toast, setToast] = useState<ToastMsg>(null);
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+export default async function ProfessorsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const professors = await getProfessors();
+  const { q } = await searchParams;
 
-  const showToast = useCallback((title: string, sub: string) => {
-    setToast({ title, sub });
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(null), 4800);
-  }, []);
-
-  const openComposer = useCallback((p: ComposePrefill = {}) => {
-    setPrefill(p);
-    setComposerKey((k) => k + 1);
-    setComposerOpen(true);
-  }, []);
-
-  useEffect(
-    () => () => {
-      if (toastTimer.current) clearTimeout(toastTimer.current);
-    },
-    []
-  );
+  const deptMap = new Map<string, number>();
+  const campusSet = new Set<string>();
+  for (const p of professors) {
+    const key = p.department ?? "Other";
+    deptMap.set(key, (deptMap.get(key) ?? 0) + 1);
+    campusSet.add(p.campus);
+  }
+  const departments = [...deptMap.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 12);
+  const campuses = [...campusSet].sort();
 
   return (
-    <>
-      <Header onCompose={() => openComposer()} />
-      <main className="flex-1">
-        <Ledger onCompose={openComposer} />
+    <div className={styles.page}>
+      <IconSprite />
+      <a className={`${styles["sr-only"]} ${styles.skip}`} href="#main">
+        Skip to directory
+      </a>
+      <DirectoryHeader active="directory" cta={{ label: "Find your prof", href: "#directory" }} />
+
+      <main id="main">
+        <section className={`${styles.wrap} ${styles.intro}`} aria-labelledby="page-title">
+          <div className={styles.breadcrumbs}>
+            <a href="/">Home</a>
+            <Icon id="chevron" className={styles.icon} />
+            <span>Faculty directory</span>
+          </div>
+          <div className={styles["intro-heading"]}>
+            <div>
+              <div className={styles.eyebrow}>A little clarity before class</div>
+              <h1 id="page-title">
+                Find your kind of <span className={styles.serif}>professor.</span>
+              </h1>
+              <p>
+                Different classrooms. Different teaching styles.
+                <br />
+                Find the perspective that helps you walk in prepared.
+              </p>
+            </div>
+            <div className={styles["intro-stamp"]} aria-hidden="true">
+              <svg>
+                <use href="#spark" />
+              </svg>
+              <span>
+                CAMPUS WISDOM
+                <br />
+                STARTS HERE
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <DirectoryClient
+          professors={professors}
+          departments={departments}
+          campuses={campuses}
+          initialQuery={q ?? ""}
+        />
       </main>
-      <Footer
-        onReport={() =>
-          showToast(
-            "Thanks — reported",
-            "Reports from verified students get abusive reviews hidden fast. False flags are logged."
-          )
-        }
-      />
-      <Composer
-        key={composerKey}
-        open={composerOpen}
-        prefill={prefill}
-        onClose={() => setComposerOpen(false)}
-        onToast={showToast}
-      />
-      <Toast msg={toast} />
-    </>
+
+      <DirectoryFooter extra={<a href="/#our-promise">Our promise</a>} />
+    </div>
   );
 }
