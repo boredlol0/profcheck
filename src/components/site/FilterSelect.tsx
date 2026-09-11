@@ -36,7 +36,7 @@ export function FilterSelect({
         {options.map((o) => (
           <DropdownMenuItem
             key={o.value}
-            onSelect={() => onChange(o.value)}
+            onClick={() => onChange(o.value)}
             className="text-[12px]"
           >
             <span className="flex-1">{o.label}</span>

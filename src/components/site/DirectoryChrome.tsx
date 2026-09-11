@@ -71,7 +71,7 @@ export function DirectoryHeader({
           <a href="/#our-promise" onClick={() => setMenuOpen(false)}>Our promise</a>
         </nav>
         <div className={styles["nav-end"]}>
-          <span className={styles["campus-note"]}><span className={styles.dot}></span> SRM, together.</span>
+          {/* <span className={styles["campus-note"]}><span className={styles.dot}></span> SRM, together.</span> */}
           {cta.href ? (
             <a className={`${styles.button} ${styles["button-dark"]}`} href={cta.href} onClick={() => setMenuOpen(false)}>
               {cta.label} <Icon id="arrow-up" className={styles.icon} />
@@ -106,7 +106,7 @@ export function DirectoryHeader({
                   </DropdownMenuLabel>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => void logout()}>
+                <DropdownMenuItem onClick={() => void logout()}>
                   <LogOutIcon /> Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>

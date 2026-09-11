@@ -53,7 +53,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="nav-actions flex items-center gap-5 max-[820px]:gap-2.5">
-          <span className="campus flex items-center gap-[7px] text-[11px]"><span className="status-dot"></span> SRM, together.</span>
+          {/* <span className="campus flex items-center gap-[7px] text-[11px]"><span className="status-dot"></span> SRM, together.</span> */}
           {email ? (
             <>
               <span className="user-chip" title={email}>
