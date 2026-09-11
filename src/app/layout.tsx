@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 };
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://profcheck.app";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://profcheck.tosh.cc.cd";
 
 const TITLE = "ProfCheck — Less guessing. Better classes.";
 const DESCRIPTION =

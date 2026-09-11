@@ -15,7 +15,7 @@ import { getSpotlight } from "@/lib/directory";
 export const dynamic = "force-dynamic";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://profcheck.app";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://profcheck.tosh.cc.cd/";
 
 export default async function Home() {
   const spotlight = await getSpotlight();
