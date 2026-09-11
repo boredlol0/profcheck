@@ -10,6 +10,7 @@ import {
   type ReviewRow,
 } from "@/lib/professor";
 import { submitReview, toggleHelpful } from "@/lib/actions";
+import { FilterSelect } from "./FilterSelect";
 import { ProfPhoto } from "./DirectoryClient";
 
 const SCORE_LABELS = ["Teaching clarity", "Approachability", "Fair grading", "Engagement"];
@@ -193,26 +194,22 @@ function RatingDialog({ prof, signal }: { prof: ProfessorRow; signal: number }) 
                 : "Rate all four — your overall is their average."}
             </p>
             <div className={styles.field}>
-              <label htmlFor="review-course">Which course?</label>
-              <select
-                id="review-course"
+              <span id="review-course-label" className="block text-[10px] font-[650] mb-[11px]">
+                Which course?
+              </span>
+              <FilterSelect
+                label="Which course?"
                 value={course}
-                required
-                onChange={(e) => {
-                  setCourse(e.target.value);
+                onChange={(v) => {
+                  setCourse(v);
                   setError(null);
                 }}
-              >
-                <option value="" disabled>
-                  Select a course
-                </option>
-                {(prof.courses_taught ?? []).map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-                <option value="Other">Other</option>
-              </select>
+                className="w-full! h-[47px]! rounded-lg! px-3! text-[11px]! text-[#23271e]!"
+                options={[
+                  ...(prof.courses_taught ?? []).map((c) => ({ value: c, label: c })),
+                  { value: "Other", label: "Other" },
+                ]}
+              />
             </div>
             <div className={styles.field}>
               <label htmlFor="review-text">What should a future student know?</label>
@@ -623,18 +620,16 @@ export function ProfileView({
                       </button>
                     ))}
                   </div>
-                  <label className={styles["sr-only"]} htmlFor="review-sort">
-                    Sort reviews
-                  </label>
-                  <select
-                    className={styles["review-sort"]}
-                    id="review-sort"
+                  <FilterSelect
+                    label="Sort reviews"
                     value={reviewSort}
-                    onChange={(e) => setReviewSort(e.target.value)}
-                  >
-                    <option value="recent">Most recent</option>
-                    <option value="rating">Highest rated</option>
-                  </select>
+                    onChange={setReviewSort}
+                    className="h-9! rounded-[9px]! px-3! text-[10px]!"
+                    options={[
+                      { value: "recent", label: "Most recent" },
+                      { value: "rating", label: "Highest rated" },
+                    ]}
+                  />
                 </div>
                 <p id="review-status" role="status" aria-live="polite">
                   {reviewFilter === "all"

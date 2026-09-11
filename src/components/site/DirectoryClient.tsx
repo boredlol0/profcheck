@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "../../app/professors/professors.module.css";
 import { Icon } from "./icons";
 import { avatarBg, initials, rankMatch, splitSpecialization, type ProfessorRow } from "@/lib/professor";
+import { FilterSelect } from "./FilterSelect";
 
 export function ProfPhoto({ p, className }: { p: ProfessorRow; className?: string }) {
   const [failed, setFailed] = useState(false);
@@ -181,20 +182,16 @@ export function DirectoryClient({
           <span className={styles["search-shortcut"]} aria-hidden="true">/</span>
           <button type="submit">Find my prof</button>
         </form>
-        <div className={styles["campus-select"]}>
-          <Icon id="pin" className={styles.icon} />
-          <label className={styles["sr-only"]} htmlFor="campus-filter">
-            Filter by campus
-          </label>
-          <select id="campus-filter" value={campus} onChange={(e) => setCampus(e.target.value)}>
-            <option value="all">All SRM campuses</option>
-            {campuses.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FilterSelect
+          label="Filter by campus"
+          value={campus}
+          onChange={setCampus}
+          className="max-[620px]:h-[42px]! max-[620px]:flex-1 max-[620px]:rounded-lg"
+          options={[
+            { value: "all", label: "All SRM campuses" },
+            ...campuses.map((c) => ({ value: c, label: c })),
+          ]}
+        />
         <button
           className={styles["mobile-filter-toggle"]}
           aria-expanded={sidebarOpen}
@@ -302,18 +299,19 @@ export function DirectoryClient({
               to get to know
             </p>
             <div className={styles["toolbar-actions"]}>
-              <div className={styles["sort-wrap"]}>
+              <div className="flex items-center gap-[7px] text-[10px] text-[#979e8d] max-[620px]:[&>label]:hidden">
                 <label htmlFor="sort-select">Sort by</label>
-                <select
-                  id="sort-select"
-                  aria-label="Sort professors"
+                <FilterSelect
+                  label="Sort professors"
                   value={sort}
-                  onChange={(e) => setSort(e.target.value as SortKey)}
-                >
-                  <option value="recommended">Featured</option>
-                  <option value="rating">Highest rated</option>
-                  <option value="name">Name: A–Z</option>
-                </select>
+                  onChange={(v) => setSort(v as SortKey)}
+                  className="h-9! rounded-[9px]! px-3! text-[10px]!"
+                  options={[
+                    { value: "recommended", label: "Featured" },
+                    { value: "rating", label: "Highest rated" },
+                    { value: "name", label: "Name: A–Z" },
+                  ]}
+                />
               </div>
               <div className={styles["view-toggle"]} role="group" aria-label="Display style">
                 <button

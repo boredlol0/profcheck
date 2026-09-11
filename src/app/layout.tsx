@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Instrument_Serif, Manrope } from "next/font/google";
+import { DM_Sans, Instrument_Serif, Manrope, Geist } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const font = DM_Sans({
   variable: "--font",
@@ -93,7 +96,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${font.variable} ${display.variable} ${serif.variable}`}
+      className={cn(font.variable, display.variable, serif.variable, "font-sans", geist.variable)}
     >
       <body>{children}</body>
     </html>

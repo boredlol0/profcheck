@@ -7,6 +7,7 @@ import { useSite, type InfoKind } from "./site-context";
 import { normalizeText } from "@/lib/professor";
 import { createClient } from "@/lib/supabase/client";
 import { submitReview } from "@/lib/actions";
+import { FilterSelect } from "./FilterSelect";
 
 function useDialog(openSignal: number | InfoKind | null) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -323,26 +324,20 @@ function RatingDialog() {
             </p>
             {picked && (
               <div className="form-field">
-                <label htmlFor="rating-course">Which course?</label>
-                <select
-                  id="rating-course"
+                <span className="block text-[11px] font-[650] mb-[10px]">Which course?</span>
+                <FilterSelect
+                  label="Which course?"
                   value={course}
-                  required
-                  onChange={(e) => {
-                    setCourse(e.target.value);
+                  onChange={(v) => {
+                    setCourse(v);
                     setError(null);
                   }}
-                >
-                  <option value="" disabled>
-                    Select a course
-                  </option>
-                  {courses.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                  <option value="Other">Other</option>
-                </select>
+                  className="w-full! h-[47px]! rounded-lg! px-3! text-[12px]! text-[#23271e]!"
+                  options={[
+                    ...courses.map((c) => ({ value: c, label: c })),
+                    { value: "Other", label: "Other" },
+                  ]}
+                />
               </div>
             )}
             <div className="form-field">

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import styles from "./login.module.css";
+import styles from "../app/login/login.module.css";
 import { IconSprite, Icon } from "@/components/site/icons";
 import { createClient } from "@/lib/supabase/client";
 
