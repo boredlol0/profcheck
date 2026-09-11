@@ -2,9 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LogOutIcon } from "lucide-react";
 import styles from "../../app/professors/professors.module.css";
 import { Icon } from "./icons";
 import { signOut, useAuth } from "./use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function DirectoryHeader({
   active,
@@ -62,14 +72,6 @@ export function DirectoryHeader({
         </nav>
         <div className={styles["nav-end"]}>
           <span className={styles["campus-note"]}><span className={styles.dot}></span> SRM, together.</span>
-          {email ? (
-            <>
-              <span className={styles["campus-note"]} title={email}>{email.split("@")[0]}</span>
-              <button className={styles["reset-button"]} onClick={logout}>Log out</button>
-            </>
-          ) : (
-            <a className={styles["reset-button"]} href="/login">Sign in</a>
-          )}
           {cta.href ? (
             <a className={`${styles.button} ${styles["button-dark"]}`} href={cta.href} onClick={() => setMenuOpen(false)}>
               {cta.label} <Icon id="arrow-up" className={styles.icon} />
@@ -84,6 +86,33 @@ export function DirectoryHeader({
             >
               {cta.label} <Icon id="arrow-up" className={styles.icon} />
             </button>
+          )}
+          {email ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                aria-label="Account menu"
+                title={email}
+                className="grid size-9 shrink-0 place-items-center rounded-full border border-outline border-black text-[11px] font-bold text-paper outline-none transition-transform hover:scale-105 focus-visible:outline-[3px] focus-visible:outline-[#a4b98b]"
+              >
+                {email.split("@")[0].slice(0, 2).toUpperCase()}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel
+                    className="max-w-55 truncate text-[11px]"
+                    title={email}
+                  >
+                    {email}
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => void logout()}>
+                  <LogOutIcon /> Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <a className={styles["reset-button"]} href="/login">Sign in</a>
           )}
           <button
             className={styles["menu-button"]}
