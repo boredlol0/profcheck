@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ProfCheck
 
-## Getting Started
+Anonymous professor ratings for SRM students. Students verify with a college email OTP, then rate professors across four categories. Browsing needs no login.
 
-First, run the development server:
+## Architecture
+
+### Frontend (`src/`)
+
+Next.js 16 App Router + React 19. Styling is Tailwind v4 (theme tokens + utilities, no preflight) plus scoped CSS Modules per route and a small set of shadcn/Base UI primitives.
+
+| Route | What it does | Data |
+|---|---|---|
+| `/` | Landing: hero search, live top-rated professor card, how-it-works, trust panel | `getSpotlight()` (server) |
+| `/professors` | Directory: instant search, department/campus filters, sort, grid/list, 50-per-page pagination | `getProfessors()` (server, ranged fetch), filtered client-side |
+| `/professor/[slug]` | Profile: category averages, reviews with helpful votes, courses taught, related professors | `getProfessor()`, `getReviews()`, `getRelated()` (server) |
+| `/login` | Split-view OTP login: story panel + stepped email/code/success flow | Supabase Auth client |
+
+Shared pieces live in `src/components/site/` (header, dialogs, directory client, profile view, icon sprite). Auth session is refreshed by `src/middleware.ts`. Login state drives the header avatar menu and gates review submission.
+
+Search is client-side token matching over the full directory: punctuation-normalized, every term must hit, name matches rank double, then alphabetical.
+
+Professor photos load through `https://profcheck.tosh.cc.cd/srmimg?url=…` with an initials-tile fallback, because SRM blocks direct hotlinking.
+
+### Backend (Supabase Postgres)
+
+| Table | Purpose |
+|---|---|
+| `professors` | 2,485 scraped rows: slug, name, department, college, campus, photo URL, specialization, `courses_taught[]`, rating aggregates, full-text `search` vector |
+| `reviews` | One row per student per professor: `clarity`, `approachability`, `grading`, `engagement` (1-5), generated `overall` (their average), course, body |
+| `helpful_votes` | One helpful vote per student per review, keeps `helpful_count` in sync |
+| `reports` | Abuse reports against reviews |
+| `scrape_runs` | Log of bulk scrape/enrichment runs |
+
+Two Postgres triggers keep derived data correct: `refresh_professor_aggregates()` recomputes per-category averages, overall, and review counts (`SECURITY DEFINER` so it never depends on caller RLS context), and `refresh_helpful_count()` syncs vote totals.
+
+Row Level Security: everyone can read professors and visible reviews (author identities are never exposed); only signed-in users can insert or edit their own reviews, votes, and reports.
+
+![Supabase database schema](./public/supabase-db-schema.png)
+
+Auth is Supabase email OTP restricted to `@srmist.edu.in`, with Resend as the SMTP provider and a branded OTP email template configured in the dashboard.
+
+### Scraping (`scripts/`)
+
+Faculty data comes from SRM's public directory endpoint, fetched in bulk from a local machine (no edge timeouts) and upserted in batches:
+
+- `scrape-srm.mjs` — pages the faculty list API, parses profile cards, writes `faculty.json` (resumable via checkpoint)
+- `enrich-srm.mjs` — visits each profile page for department, email, and courses taught; `--upload` pushes to Supabase
+- `upload-faculty.mjs` — bulk upsert helper
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy `.env.example` to `.env.local` and fill in:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SITE_URL=   # used for canonical URLs and OG metadata
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev     # start dev server
+npm run build   # production build
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Database migrations live in Supabase and are applied in order: professors table, enrichment columns, reviews/votes/reports with triggers and RLS, aggregate hardening.
