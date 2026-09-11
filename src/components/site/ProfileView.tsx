@@ -194,22 +194,25 @@ function RatingDialog({ prof, signal }: { prof: ProfessorRow; signal: number }) 
                 : "Rate all four — your overall is their average."}
             </p>
             <div className={styles.field}>
-              <span id="review-course-label" className="block text-[10px] font-[650] mb-[11px]">
-                Which course?
-              </span>
-              <FilterSelect
-                label="Which course?"
+              <label htmlFor="review-course">Which course?</label>
+              <select
+                id="review-course"
                 value={course}
-                onChange={(v) => {
-                  setCourse(v);
+                onChange={(e) => {
+                  setCourse(e.target.value);
                   setError(null);
                 }}
-                className="w-full! h-[47px]! rounded-lg! px-3! text-[11px]! text-[#23271e]!"
-                options={[
-                  ...(prof.courses_taught ?? []).map((c) => ({ value: c, label: c })),
-                  { value: "Other", label: "Other" },
-                ]}
-              />
+              >
+                <option value="" disabled>
+                  Select a course
+                </option>
+                {(prof.courses_taught ?? []).map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+                <option value="Other">Other</option>
+              </select>
             </div>
             <div className={styles.field}>
               <label htmlFor="review-text">What should a future student know?</label>

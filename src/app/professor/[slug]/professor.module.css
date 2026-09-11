@@ -1322,7 +1322,8 @@
   padding: 29px;
   background: var(--paper);
   color: var(--ink);
-  box-shadow: 0 35px 110px #16201035
+  box-shadow: 0 35px 110px #16201035;
+  margin: auto
 }
 
 .page dialog::backdrop {

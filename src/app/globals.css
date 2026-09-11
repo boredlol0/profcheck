@@ -1110,6 +1110,7 @@ dialog {
   max-height: 90dvh;
   overflow-y: auto;
   box-shadow: 0 35px 110px #16201035;
+  margin: auto;
 }
 
 dialog::backdrop {
