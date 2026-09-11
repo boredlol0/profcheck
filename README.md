@@ -4,6 +4,18 @@ Anonymous professor ratings for SRM students. Students verify with a college ema
 
 ## Architecture
 
+| Layer | Tool |
+|---|---|
+| Framework | Next.js 16 App Router + React 19 |
+| Styling | Tailwind v4 + scoped CSS Modules |
+| UI primitives | shadcn / Base UI |
+| Database | Supabase Postgres |
+| Auth | Supabase email OTP (`@srmist.edu.in` only) |
+| Email delivery | Resend (Supabase SMTP) |
+| Faculty data | Scripts scraping the official SRMIST website |
+| Professor photos | External image proxy with initials-tile fallback |
+| Hosting | Vercel |
+
 ### Frontend (`src/`)
 
 Next.js 16 App Router + React 19. Styling is Tailwind v4 (theme tokens + utilities, no preflight) plus scoped CSS Modules per route and a small set of shadcn/Base UI primitives.
@@ -39,13 +51,9 @@ Row Level Security: everyone can read professors and visible reviews (author ide
 
 Auth is Supabase email OTP restricted to `@srmist.edu.in`, with Resend as the SMTP provider and a branded OTP email template configured in the dashboard.
 
-### Scraping (`scripts/`)
+### Scraping
 
-Faculty data comes from SRM's public directory endpoint, fetched in bulk from a local machine (no edge timeouts) and upserted in batches:
-
-- `scrape-srm.mjs` — pages the faculty list API, parses profile cards, writes `faculty.json` (resumable via checkpoint)
-- `enrich-srm.mjs` — visits each profile page for department, email, and courses taught; `--upload` pushes to Supabase
-- `upload-faculty.mjs` — bulk upsert helper
+Faculty data was scraped using scripts from the official SRMIST website, then enriched and upserted into Supabase in batches.
 
 ## Setup
 
