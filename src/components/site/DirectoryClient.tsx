@@ -6,23 +6,44 @@ import { Icon } from "./icons";
 import { avatarBg, initials, rankMatch, splitSpecialization, type ProfessorRow } from "@/lib/professor";
 
 export function ProfPhoto({ p, className }: { p: ProfessorRow; className?: string }) {
-  
-  
+  const [failed, setFailed] = useState(false);
+  // Some rows store a relative path ("/wp-content/...") — expand to a full URL.
+  const raw = (p.photo_url ?? "").trim();
+  const fullUrl = raw.startsWith("http")
+    ? raw
+    : raw.startsWith("/")
+      ? `https://www.srmist.edu.in${raw}`
+      : "";
+  if (!fullUrl || failed) {
+    // Initials tile fallback (SRM blocks direct hotlinking; /api/photo proxies it).
+    return (
+      <div
+        className={className}
+        aria-hidden="true"
+        style={{
+          background: avatarBg(p.srm_slug),
+          display: "grid",
+          placeItems: "center",
+          fontWeight: 800,
+          fontSize: 20,
+          color: "#4d5a40",
+          fontFamily: "var(--display)",
+        }}
+      >
+        {initials(p.name)}
+      </div>
+    );
+  }
   return (
-    <div
-      className={className}
-      aria-hidden="true"
-      style={{
-        background: avatarBg(p.srm_slug),
-        display: "grid",
-        placeItems: "center",
-        fontWeight: 800,
-        fontSize: 20,
-        color: "#4d5a40",
-        fontFamily: "var(--display)",
-      }}
-    >
-      {initials(p.name)}
+    <div className={className} style={{ overflow: "hidden" }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`https://profcheck.tosh.cc.cd/srmimg?url=${encodeURIComponent(fullUrl)}`}
+        alt=""
+        loading="lazy"
+        onError={() => setFailed(true)}
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
     </div>
   );
 }

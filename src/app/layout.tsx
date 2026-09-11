@@ -26,10 +26,60 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://profcheck.app";
+
+const TITLE = "ProfCheck — Less guessing. Better classes.";
+const DESCRIPTION =
+  "Anonymous, student-run professor ratings for SRM Kattankulathur. Know your faculty before you walk in — verified SRM emails, no names, no trace.";
+
 export const metadata: Metadata = {
-  title: "ProfCheck — Less guessing. Better classes.",
-  description:
-    "ProfCheck — an independent, anonymous professor rating concept for the SRM student community.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: "%s — ProfCheck",
+  },
+  description: DESCRIPTION,
+  keywords: [
+    "SRM professor reviews",
+    "SRM faculty ratings",
+    "ProfCheck",
+    "SRM Kattankulathur",
+    "anonymous professor rating",
+    "SRMIST",
+  ],
+  authors: [{ name: "ProfCheck Student Collective" }],
+  creator: "ProfCheck Student Collective",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName: "ProfCheck",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "ProfCheck — anonymous professor ratings for SRM students",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og.png"],
+  },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 42'><path fill='%23d4f67a' stroke='%2323271e' stroke-width='1.5' d='m19 2 5 5 7 1 1 7 4 6-4 6-1 7-7 1-5 5-5-5-7-1-1-7-4-6 4-6 1-7 7-1Z'/><path d='m11 21 5 5 11-11' fill='none' stroke='%2323271e' stroke-width='2.7' stroke-linecap='round' stroke-linejoin='round'/></svg>",
   },

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import styles from "./professors.module.css";
 import { getProfessors } from "@/lib/directory";
 import { IconSprite, Icon } from "@/components/site/icons";
@@ -5,6 +6,31 @@ import { DirectoryFooter, DirectoryHeader } from "@/components/site/DirectoryChr
 import { DirectoryClient } from "@/components/site/DirectoryClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Find your professor",
+  description:
+    "Browse 2,485 SRM professors by name, department, or subject. Anonymous student ratings on teaching, grading, and workload.",
+  alternates: { canonical: "/professors" },
+  openGraph: {
+    title: "Find your professor — ProfCheck",
+    description:
+      "Browse 2,485 SRM professors by name, department, or subject. Know your faculty before you walk in.",
+    url: "/professors",
+    images: [
+      {
+        url: "/og.png",
+        width: 1872,
+        height: 1170,
+        alt: "ProfCheck professor directory — search, filters, and ratings",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.png"],
+  },
+};
 
 export default async function ProfessorsPage({
   searchParams,

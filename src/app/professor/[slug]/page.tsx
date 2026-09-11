@@ -17,9 +17,25 @@ export async function generateMetadata({
   const { slug } = await params;
   const prof = await getProfessor(slug);
   if (!prof) return { title: "Professor not found — ProfCheck" };
+  const title = `${prof.name} — ProfCheck`;
+  const description =
+    prof.ratings_count > 0 && prof.avg_overall != null
+      ? `${prof.name}, ${prof.department ?? "SRM"} (${prof.campus}) — rated ${Number(prof.avg_overall).toFixed(1)}/5 across clarity, approachability, grading, and engagement by verified SRM students.`
+      : `${prof.name}, ${prof.department ?? "SRM"} (${prof.campus}) — no ratings yet. Be the first verified SRM student to review on ProfCheck.`;
   return {
-    title: `${prof.name} — ProfCheck`,
-    description: `${prof.name}, ${prof.department ?? "SRM"} (${prof.campus}). Anonymous student reviews on ProfCheck.`,
+    title,
+    description,
+    alternates: { canonical: `/professor/${slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `/professor/${slug}`,
+      images: [{ url: "/og.png", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: ["/og.png"],
+    },
   };
 }
 

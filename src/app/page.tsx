@@ -14,10 +14,31 @@ import { getSpotlight } from "@/lib/directory";
 
 export const dynamic = "force-dynamic";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://profcheck.app";
+
 export default async function Home() {
   const spotlight = await getSpotlight();
   return (
     <SiteProvider>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "ProfCheck",
+            url: SITE_URL,
+            description:
+              "Anonymous, student-run professor ratings for SRM Kattankulathur.",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: `${SITE_URL}/professors?q={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
+          }),
+        }}
+      />
       <IconSprite />
       <a href="#main" className="sr-only">Skip to content</a>
       <SiteHeader />

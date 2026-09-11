@@ -1140,9 +1140,9 @@
 }
 
 .thought-card h3 {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--display);
+  font-weight: 650;
+  letter-spacing: -.5px;
   font-size: 25px;
   line-height: 1.25;
   color: #7f8c6f;

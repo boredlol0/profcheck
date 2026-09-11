@@ -166,7 +166,7 @@ function RatingDialog({ prof, signal }: { prof: ProfessorRow; signal: number }) 
       {!done ? (
         <div>
           <h2 id="rating-title">
-            Tell it <span className={styles.serif}>thoughtfully.</span>
+            Tell it thoughtfully.
           </h2>
           <p className={styles["dialog-description"]}>
             Specific experiences help. Personal details don’t. Verified SRM-only.
@@ -257,7 +257,7 @@ function RatingDialog({ prof, signal }: { prof: ProfessorRow; signal: number }) 
             <Icon id="check" className={styles.icon} />
           </div>
           <h2>
-            That’s the <span className={styles.serif}>spirit.</span>
+            That’s the spirit.
           </h2>
           <p>Your take is in. Some junior, registration week, will thank you silently.</p>
           <button
@@ -307,7 +307,7 @@ function ShareDialog({ prof, signal }: { prof: ProfessorRow; signal: number }) {
         </button>
       </div>
       <h2 id="share-title">
-        Pass the <span className={styles.serif}>perspective.</span>
+        Pass the perspective.
       </h2>
       <p className={styles["dialog-description"]}>Copy the link to {prof.name}’s profile.</p>
       <div className={styles["share-link"]}>
@@ -525,7 +525,7 @@ export function ProfileView({
           <section className={styles.overview} id="overview" aria-labelledby="overview-title">
             <div className={styles["section-heading"]}>
               <h2 id="overview-title">
-                The classroom <span className={styles.serif}>at a glance.</span>
+                The classroom at a glance.
               </h2>
               <span className={styles.eyebrow}>Beyond the number</span>
             </div>
@@ -595,7 +595,7 @@ export function ProfileView({
           <section className={styles.reviews} id="reviews" aria-labelledby="reviews-title">
             <div className={styles["section-heading"]}>
               <h2 id="reviews-title">
-                From the <span className={styles.serif}>classroom.</span>
+                From the classroom.
               </h2>
               <span className={styles["review-count"]}>
                 {prof.ratings_count} {prof.ratings_count === 1 ? "perspective" : "perspectives"}
@@ -732,7 +732,7 @@ export function ProfileView({
           <section id="courses" aria-labelledby="courses-title">
             <div className={styles["section-heading"]}>
               <h2 id="courses-title">
-                On the <span className={styles.serif}>timetable.</span>
+                On the timetable.
               </h2>
               <span className={styles.eyebrow}>
                 {courses.length} subject{courses.length === 1 ? "" : "s"}
@@ -778,7 +778,7 @@ export function ProfileView({
             <h2>
               Your experience.
               <br />
-              Their <span className={styles.serif}>head start.</span>
+              Their head start.
             </h2>
             <p>Been in a class like this? Try leaving a thoughtful take for the student coming after you.</p>
             <button className={`${styles.button} ${styles["button-lime"]}`} onClick={openRating}>
@@ -829,7 +829,7 @@ export function ProfileView({
         <div className={styles.wrap}>
           <div className={styles["section-heading"]}>
             <h2 id="related-title">
-              A little more <span className={styles.serif}>exploring?</span>
+              A little more exploring?
             </h2>
             <a className={styles["text-link"]} href="/professors">
               All professors <Icon id="arrow" className={styles.icon} />
