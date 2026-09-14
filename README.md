@@ -1,6 +1,22 @@
 # ProfCheck
 
-ProfCheck is a student-focused web platform for discovering professors, exploring structured student feedback, and sharing reviews anonymously.
+Anonymous professor ratings for SRM students. Students verify with a college email OTP, then rate professors across four categories. Browsing needs no login.
+
+## Problem
+
+At SRM you cannot choose your faculty, and you have no way to know how your teachers will be before classes start. Teaching style, grading fairness, workload and classroom expectations stay unknown until you are already sitting in the room. ProfCheck fixes this by letting you know about your professors beforehand through structured feedback from students who already took their classes.
+
+## Solution
+
+ProfCheck is a verified student review platform. Only SRM students can write reviews using college email OTP, while anyone can browse. Each review rates clarity, approachability, grading and engagement separately, so professor profiles show per-category averages instead of a single vague score.
+
+## Features
+
+* Professor directory with instant search, department and campus filters, sorting and pagination
+* Professor profiles with category averages, overall rating, courses taught and related professors
+* Anonymous reviews with four category ratings and course selection
+* College email OTP login with no passwords
+* Helpful votes and abuse reports on reviews
 
 ## Architecture
 
